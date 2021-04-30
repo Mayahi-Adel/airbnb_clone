@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const Users = require('../models/users.model');
 
 // constants
@@ -6,7 +7,7 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
 const NAME_REGEX = /^([a-zA-Z ]+)$/;
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
     // Params
     const {
         email,
@@ -15,12 +16,6 @@ exports.signup = (req, res) => {
         password,
         role
     } = req.body;
-    // const email = req.body.email;
-    // const first_name = req.body.username;
-    // const last_name = req.body.lastname;
-    // const password = req.body.password;
-    // const role = req.body.role;
-
 
     if (email == null || password == null || first_name == null || last_name == null) {
         return res.status(400).json({
@@ -51,32 +46,42 @@ exports.signup = (req, res) => {
         })
     }
 
-    Users.findOne(email, (error, response) => {
-        if (error) {
-            response.send(error.message);
-        }
+    try {
 
-        if (response == "") {
 
-            Users.addOne(req.body, (error, result) => {
-                if (error) {
-                    result.send(error.message);
-                }
-                return res.status(201).json({
-                    "succes": 'Add new user',
+        const result = await Users.findOne(email)
+
+        if (result[0].length == 0) {
+            const saltRounds = 10;
+            const hash = await bcrypt.hash(password, saltRounds);
+            const newUser = {
+                email,
+                hash,
+                first_name,
+                last_name,
+                role
+            }
+
+            const added = await Users.addOne(newUser);
+            console.log(added[0])
+            return res.status(201).json({
+                succes: 'Add new user',
+                date: {
                     "role": "host",
                     "first_name": first_name,
                     "last_name": last_name,
                     "email": email
+                }
 
-                })
             })
         } else {
             return res.status(409).json({
                 'error': 'user already exist',
             })
         }
-
-    });
+    } catch (error) {
+        console.error("hello", error)
+        res.status(409).send(error.message)
+    }
 
 }

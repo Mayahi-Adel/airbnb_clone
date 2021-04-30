@@ -15,4 +15,4 @@ db.connect((error) => {
     console.log("data base connexion")
 })
 
-module.exports = db;
+module.exports = db.promise();
