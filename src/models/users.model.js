@@ -2,7 +2,7 @@ const db = require('../db');
 const express = require('express');
 
 exports.findOne = async (email) => {
-    return await db.execute(`SELECT * from user WHERE email = ?`, [email]);
+    return await db.execute(`SELECT * FROM user WHERE email = ?`, [email]);
 }
 
 exports.addOne = async (user) => {

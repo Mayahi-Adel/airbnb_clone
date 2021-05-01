@@ -1,53 +1,23 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const Users = require('../models/users.model');
+const checkInputs = require('../utils/checkInputs')
 
-// constants
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
-const NAME_REGEX = /^([a-zA-Z ]+)$/;
+
 
 exports.signup = async (req, res) => {
     // Params
-    const {
-        email,
-        first_name,
-        last_name,
-        password,
-        role
-    } = req.body;
+    const { email, first_name, last_name, password, role } = req.body;
 
-    if (email == null || password == null || first_name == null || last_name == null) {
-        return res.status(400).json({
-            'error': 'missing parameters'
-        });
-    }
+    // Check the user inputs
+    const { Status, Msg } = checkInputs(req.body);
 
-    if (!EMAIL_REGEX.test(email)) {
-        return res.status(400).json({
-            'error': 'email is not valid'
-        });
+    if (Status) {
+        return res.status(Status).json({ "error": Msg });
     }
-
-    if (!PASSWORD_REGEX.test(password)) {
-        return res.status(400).json({
-            'error': 'password invalid (must length 4 - 12 and include 1 number at least)'
-        })
-    }
-
-    if (!NAME_REGEX.test(first_name)) {
-        return res.status(400).json({
-            'error': 'first_name invalid (must be a string)'
-        })
-    }
-    if (!NAME_REGEX.test(last_name)) {
-        return res.status(400).json({
-            'error': 'last_name invalid (must be a string)'
-        })
-    }
+    // End check
 
     try {
-
 
         const result = await Users.findOne(email)
 
@@ -75,6 +45,7 @@ exports.signup = async (req, res) => {
 
             })
         } else {
+            console.log(result[0])
             return res.status(409).json({
                 'error': 'user already exist',
             })
