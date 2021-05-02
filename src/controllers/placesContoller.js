@@ -5,11 +5,11 @@ exports.addPlace = async (req, res) => {
     // Params
     const { city_id, name, description, rooms, bathrooms, max_guests, price_by_night, available } = req.body;
     const user_id = 2;
-    if (city_id == null || name == null || description == "" || rooms == "" || bathrooms == "" || max_guests == "" || price_by_night == "" ) {
-        return {
-            Status: (400),
-            Msg: "missing parameters"
-        }
+    console.log(name)
+    if (city_id == "" || name == "" || description == "" || rooms == "" || bathrooms == "" || max_guests == "" || price_by_night == "" ) {
+        return res.status(400).json({
+            error: "missing parameters"
+        })
     }
 
     try {
