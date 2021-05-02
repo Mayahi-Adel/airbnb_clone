@@ -39,7 +39,7 @@ exports.signup = async (req, res) => {
             //console.log(added[0])
             return res.status(201).json({
                 succes: 'Add new user',
-                date: {
+                data: {
                     "role": "host",
                     "first_name": first_name,
                     "last_name": last_name,
@@ -71,7 +71,7 @@ exports.signin = async (req, res) => {
             })
         } else {
             const hash = result[0][0].password;
-            console.log(result[0][0].password)
+            //console.log(result[0][0].password)
             const isCorrect = bcrypt.compare(password, hash) // Pourquoi avec await ca marche pas !!
             console.log(isCorrect)
             if(!isCorrect){

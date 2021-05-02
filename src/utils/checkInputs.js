@@ -4,13 +4,7 @@ const checkInputs = (inputs, res) => {
     const PASSWORD_REGEX = /^(?=.*\d).{4,12}$/;
     const NAME_REGEX = /^([a-zA-Z ]+)$/;
 
-    const {
-        email,
-        first_name,
-        last_name,
-        password,
-        role
-    } = inputs;
+    const { email, first_name, last_name, password, role } = inputs;
 
     if (email == "" || password == "" || first_name == "" || last_name == "") {
         return {
