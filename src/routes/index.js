@@ -15,6 +15,7 @@ router.post("/signup/", usersController.signup);
 router.post("/signin/", usersController.signin);
 // places routes
 router.post("/places/", placesController.addPlace);
+router.get("/places/:placeId", placesController.getPlace);
 
 
 

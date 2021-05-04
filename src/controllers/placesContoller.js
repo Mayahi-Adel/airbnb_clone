@@ -1,11 +1,15 @@
 const express = require('express');
 const Places = require('../models/places.model');
+const jwtUtils = require("../utils/jwt.utils");
 
 exports.addPlace = async (req, res) => {
+
+    const headerAuth = req.headers['authorization'];
+    const user_id     = jwtUtils.getUserId(headerAuth);
+
     // Params
     const { city_id, name, description, rooms, bathrooms, max_guests, price_by_night, available } = req.body;
-    const user_id = 2;
-    console.log(name)
+    
     if (city_id == "" || name == "" || description == "" || rooms == "" || bathrooms == "" || max_guests == "" || price_by_night == "" ) {
         return res.status(400).json({
             error: "missing parameters"
