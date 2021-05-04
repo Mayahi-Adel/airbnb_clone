@@ -1,12 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const Users = require('../models/users.model');
-const jwt = require("jsonwebtoken"); 
-const dotenv = require('dotenv');
 const checkInputs = require('../utils/checkInputs');
+const jwtUtils = require("../utils/jwt.utils")
 
-dotenv.config();
-const MAX_AGE = Math.floor(Date.now() / 1000) + (60 * 60);
 
 exports.signup = async (req, res) => {
     // Params
@@ -39,7 +36,7 @@ exports.signup = async (req, res) => {
             //console.log(added[0])
             return res.status(201).json({
                 succes: 'Add new user',
-                date: {
+                data: {
                     "role": "host",
                     "first_name": first_name,
                     "last_name": last_name,
@@ -62,7 +59,7 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
     // Params
     const { email, password } = req.body;
-
+    
     try {
         const result = await Users.findOne(email)
         if (result[0].length == 0) {
@@ -71,21 +68,23 @@ exports.signin = async (req, res) => {
             })
         } else {
             const hash = result[0][0].password;
-            console.log(result[0][0].password)
+            //console.log(result[0][0].password)
             const isCorrect = bcrypt.compare(password, hash) // Pourquoi avec await ca marche pas !!
-            console.log(isCorrect)
+            
             if(!isCorrect){
                 return res.status(409).json({
                     'warning': "invalid pasword !" 
                 })
             } else {
                 const user = {
+                    user_id : result[0][0].id,
                     firstname: result[0][0].firstname,
                     lastname: result[0][0].lastname,
                     email: result[0][0].email,
                     role: result[0][0].role
                 }
-                const token = await jwt.sign(user, process.env.SECRET_JWT)
+                const token = await jwtUtils.generateTokenForUser(result[0][0])
+                
                 return res.status(200).json({
                     token,
                     user

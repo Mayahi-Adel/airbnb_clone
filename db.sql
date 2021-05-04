@@ -11,7 +11,7 @@ CREATE TABLE users(
     role TINYINT DEFAULT 0
 );
 
-CREATE TABLE cities(
+CREATE TABLE city(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(45) NOT NULL
 );
@@ -24,7 +24,7 @@ CREATE TABLE place(
     bathrooms INT NOT NULL,
     max_guests INT NOT NULL,
     price_by_night FLOAT NOT NULL,
-    available TINYINT DEFAULT 0,
+    available TEXT NOT NULL,
     user_id INT NOT NULL,
     city_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user(id),

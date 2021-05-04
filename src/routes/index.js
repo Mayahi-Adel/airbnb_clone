@@ -1,5 +1,6 @@
 const express = require("express")
-const usersController = require('../controllers/usersController');
+const usersController = require("../controllers/usersController");
+const placesController = require("../controllers/placesContoller")
 const router = express.Router();
 
 
@@ -10,8 +11,11 @@ router.get('/', (req, res) => {
 });
 
 // users routes
-router.post('/signup/', usersController.signup);
-router.post('/signin/', usersController.signin);
+router.post("/signup/", usersController.signup);
+router.post("/signin/", usersController.signin);
+// places routes
+router.post("/places/", placesController.addPlace);
+router.get("/places/:placeId", placesController.getPlace);
 
 
 
