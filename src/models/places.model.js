@@ -19,3 +19,7 @@ exports.addOne = async (place) => {
     VALUES (?, ?, ?, ?, ?, ?, ? ,?, ?)`,
      [city_id, user_id, name, description, rooms, bathrooms, max_guests, price_by_night, available])
 }
+
+exports.findOne = async (placeId) => {
+    return await db.execute(`SELECT *, place.id as placeId, place.name as placeName FROM place INNER JOIN city ON place.city_id = city.id WHERE place.id = ?`, [placeId]);
+}
