@@ -35,3 +35,8 @@ exports.update = async (placeId, reqBody) => {
 exports.findByCityName = async (city) => {
     return await db.execute(`SELECT place.id as id, place.name as name, description, rooms, bathrooms, max_guests, price_by_night, city.name as city FROM place INNER JOIN city ON place.city_id = city.id WHERE city.name = ?`, [city])
 }
+
+exports.deleteOne = async (placeId) => {
+    db.execute(`DELETE FROM booking WHERE place_id = ?`, [placeId]);
+    return db.execute(`DELETE FROM place WHERE id = ?`, [placeId]);
+}

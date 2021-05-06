@@ -146,7 +146,7 @@ exports.editPlace = async (req, res) => {
 
     try {
         const place = await Places.findOne(placeId);
-        console.log(place[0])
+        // console.log(place[0])
         //let edited = await Places.update(placeId, req.body);
         return res.status(200).json({
             message: "On teste !"
@@ -174,4 +174,42 @@ exports.placesByCityName = async (req, res) => {
         console.error(error)
         res.status(409).send(error.message)
     }
+}
+
+exports.removePlace = async (req, res) => {
+    const headerAuth = req.headers['authorization'];
+    const user    = jwtUtils.getUserId(headerAuth);
+    
+    const { user_id, role } = user;
+    
+    if (user_id == -1) {
+        return res.status(400).json({
+            error: "You are not connected !"
+        })
+    } 
+    
+    if (role == 0){
+        return res.status(403).json({
+            error: "You dont have permission to add place, you are not a host"
+        })
+    }
+    //Params
+    const placeId = req.params.placeId;
+
+    try {
+        const place = await Places.findOne(placeId);
+        if(place[0].length == 0){
+            return res.status(404).json({
+                'error': 'The requested resource does not exist',
+            })
+        } else {
+            const deleted = await Places.deleteOne(placeId);
+            return res.status(204).json()
+        }
+
+    } catch (error) {
+        console.error(error)
+        res.status(409).send(error.message)
+    }
+
 }
