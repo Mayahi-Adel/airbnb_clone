@@ -5,8 +5,21 @@ const jwtUtils = require("../utils/jwt.utils");
 exports.addPlace = async (req, res) => {
 
     const headerAuth = req.headers['authorization'];
-    const user_id     = jwtUtils.getUserId(headerAuth);
-
+    const user    = jwtUtils.getUserId(headerAuth);
+    
+    const { user_id, role } = user;
+    
+    if (user_id == -1) {
+        return res.status(400).json({
+            error: "You are not connected !"
+        })
+    } 
+    
+    if (role == 0){
+        return res.status(403).json({
+            error: "You dont have permission to add place, you are not a host"
+        })
+    }
     // Params
     const { city_id, name, description, rooms, bathrooms, max_guests, price_by_night, available } = req.body;
     
@@ -50,7 +63,7 @@ exports.addPlace = async (req, res) => {
 
 }
 
-exports.getPlace = async (req, res) => {
+exports.getPlaceById = async (req, res) => {
 
     const placeId    = req.params.placeId;
 
@@ -78,6 +91,84 @@ exports.getPlace = async (req, res) => {
                 "message": "The requested resource does not exist"
             })
         }
+
+    } catch (error) {
+        console.error(error)
+        res.status(409).send(error.message)
+    }
+}
+
+exports.getPlaces = async (req, res) => {
+    try {
+        let places = await Places.findAll();
+        places = places[0];
+        
+        return res.status(200).json({
+            places
+        })
+
+    } catch (error) {
+        console.error(error)
+        res.status(409).send(error.message)
+    }
+}
+
+exports.editPlace = async (req, res) => {
+
+    const headerAuth = req.headers['authorization'];
+    const user_id    = jwtUtils.getUserId(headerAuth);
+    const placeId    = req.params.placeId;
+
+    // Params
+    const place = { 
+        name: "",
+        description: "",
+        rooms: "",
+        bathrooms: "",
+        max_guests: "",
+        price_by_night: "",
+        available: "" };
+    
+    for ( const elt in req.body) {
+        
+        if(!(elt in place)) {
+            return res.status(400).json({
+                message: `the field ${elt} does not exist !`
+            })
+        }
+    }
+
+    if (user_id == -1) {
+        return res.status(400).json({
+            error: "You are not connected !"
+        })
+    } 
+
+    try {
+        const place = await Places.findOne(placeId);
+        console.log(place[0])
+        //let edited = await Places.update(placeId, req.body);
+        return res.status(200).json({
+            message: "On teste !"
+        })
+
+    } catch (error) {
+        console.error(error)
+        res.status(409).send(error.message)
+    }
+}
+
+exports.placesByCityName = async (req, res) => {
+
+    const city = req.params.cityName;
+    
+    try {
+        let places = await Places.findByCityName(city);
+        places = places[0];
+        
+        return res.status(200).json({
+            places
+        })
 
     } catch (error) {
         console.error(error)

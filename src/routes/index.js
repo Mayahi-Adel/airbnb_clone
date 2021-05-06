@@ -15,7 +15,10 @@ router.post("/signup/", usersController.signup);
 router.post("/signin/", usersController.signin);
 // places routes
 router.post("/places/", placesController.addPlace);
-router.get("/places/:placeId", placesController.getPlace);
+router.get("/places/:placeId", placesController.getPlaceById);
+router.get("/places/", placesController.getPlaces);
+router.patch("/places/:placeId", placesController.editPlace);
+router.get("/places/city/:cityName", placesController.placesByCityName)
 
 
 

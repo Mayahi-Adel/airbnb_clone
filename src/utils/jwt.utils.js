@@ -19,15 +19,24 @@ exports.parseAuthorization = (authorization) => {
 }
 
 exports.getUserId = (authorization) => {
-    let userId = -1;
+    // let userId = -1;
+    // let role = 0;
+    let user = {
+        "user_id": -1,
+        "role": 0
+    }
     const token = exports.parseAuthorization(authorization);
     if(token != null) {
         
         try {
             const jwtToken = jwt.verify(token, process.env.SECRET_JWT);
             if(jwtToken != null)
-                userId = jwtToken.userId;
+                // userId = jwtToken.userId;
+                user = {
+                    "user_id": jwtToken.userId,
+                    "role": jwtToken.role
+                }
         } catch (err) {}
     }
-    return userId;
+    return user;
 }

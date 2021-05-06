@@ -81,7 +81,7 @@ exports.signin = async (req, res) => {
                     firstname: result[0][0].firstname,
                     lastname: result[0][0].lastname,
                     email: result[0][0].email,
-                    role: result[0][0].role
+                    role: result[0][0].role == 0 ? "touriste" : "hôte"
                 }
                 const token = await jwtUtils.generateTokenForUser(result[0][0])
                 
