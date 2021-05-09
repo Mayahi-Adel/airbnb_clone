@@ -1,7 +1,8 @@
 const express = require("express")
 const usersController = require("../controllers/usersController");
 const placesController = require("../controllers/placesContoller");
-const bookingsController = require("../controllers/bookingsController")
+const bookingsController = require("../controllers/bookingsController");
+const citiesContoller = require("../controllers/citiesContoller");
 const router = express.Router();
 
 
@@ -25,6 +26,9 @@ router.delete("/places/:placeId", placesController.removePlace);
 router.post("/bookings", bookingsController.addBooking);
 router.get("/bookings", bookingsController.getBookings);
 router.delete("/bookings/:bookingId", bookingsController.removeBooking);
+//router.get("bookings?place_id=:placeId", bookingsController.)
+// cities routes
+router.get("/cities", citiesContoller.getCities)
 
 
 

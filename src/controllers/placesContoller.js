@@ -21,7 +21,7 @@ exports.addPlace = async (req, res) => {
         })
     }
     // Params
-    const { city_id, name, description, rooms, bathrooms, max_guests, price_by_night, available } = req.body;
+    const { city_id, name, description, rooms, bathrooms, max_guests, price_by_night, available, image_url } = req.body;
     
     if (city_id == "" || name == "" || description == "" || rooms == "" || bathrooms == "" || max_guests == "" || price_by_night == "" ) {
         return res.status(400).json({
@@ -39,7 +39,8 @@ exports.addPlace = async (req, res) => {
             bathrooms,
             max_guests,
             price_by_night,
-            available
+            available,
+            image_url
         }
         const added = await Places.addOne(newPlace);
         return res.status(201).json({
@@ -52,7 +53,8 @@ exports.addPlace = async (req, res) => {
                 "bathrooms": bathrooms,
                 "max_guests": max_guests,
                 "price_by_night": price_by_night,
-                "available": available
+                "available": available,
+                "image_url": image_url
             }
         })
 
@@ -83,7 +85,8 @@ exports.getPlaceById = async (req, res) => {
                     "bathrooms": place.bathrooms,
                     "max_guests": place.max_guests,
                     "price_by_night": place.price_by_night,
-                    "available": place.available
+                    "available": place.available,
+                    "image_url": place.image_url
                 
             })
         } else {
@@ -127,7 +130,9 @@ exports.editPlace = async (req, res) => {
         bathrooms: "",
         max_guests: "",
         price_by_night: "",
-        available: "" };
+        available: "",
+        place_url: ""
+    };
     
     for ( const elt in req.body) {
         

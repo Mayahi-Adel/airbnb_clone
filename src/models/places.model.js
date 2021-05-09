@@ -11,13 +11,14 @@ exports.addOne = async (place) => {
         bathrooms,
         max_guests,
         price_by_night,
-        available
+        available,
+        image_url
     } = place;
 
     return await db.execute(`INSERT INTO place 
-    (city_id, user_id, name, description, rooms, bathrooms, max_guests, price_by_night, available ) 
-    VALUES (?, ?, ?, ?, ?, ?, ? ,?, ?)`,
-     [city_id, user_id, name, description, rooms, bathrooms, max_guests, price_by_night, available])
+    (city_id, user_id, name, description, rooms, bathrooms, max_guests, price_by_night, available, image_url ) 
+    VALUES (?, ?, ?, ?, ?, ?, ? ,?, ?, ?)`,
+     [city_id, user_id, name, description, rooms, bathrooms, max_guests, price_by_night, available, image_url])
 }
 
 exports.findOne = async (placeId) => {
@@ -25,7 +26,7 @@ exports.findOne = async (placeId) => {
 }
 
 exports.findAll = async () => {
-    return await db.execute(`SELECT place.id as placeId, place.name as placeName, description, rooms, bathrooms, max_guests, price_by_night, city.name as city FROM place INNER JOIN city ON place.city_id = city.id`)
+    return await db.execute(`SELECT place.id as placeId, place.name as placeName, description, rooms, bathrooms, max_guests, price_by_night, image_url, city.name as city FROM place INNER JOIN city ON place.city_id = city.id`)
 }
 
 exports.update = async (placeId, reqBody) => {
@@ -33,7 +34,7 @@ exports.update = async (placeId, reqBody) => {
 }
 
 exports.findByCityName = async (city) => {
-    return await db.execute(`SELECT place.id as id, place.name as name, description, rooms, bathrooms, max_guests, price_by_night, city.name as city FROM place INNER JOIN city ON place.city_id = city.id WHERE city.name = ?`, [city])
+    return await db.execute(`SELECT place.id as id, place.name as name, description, rooms, bathrooms, max_guests, price_by_night, image_url, city.name as city FROM place INNER JOIN city ON place.city_id = city.id WHERE city.name = ?`, [city])
 }
 
 exports.deleteOne = async (placeId) => {
