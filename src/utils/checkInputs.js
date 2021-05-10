@@ -39,6 +39,7 @@ const checkInputs = (inputs, res) => {
             Msg: "last_name invalid (must be a string)"
         }
     }
+   else return false
 }
 
 module.exports = checkInputs
